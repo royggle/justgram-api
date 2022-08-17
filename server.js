@@ -7,7 +7,6 @@ const { DataSource } = require("typeorm");
 
 const express = require("express");
 const cors = require("cors");
-const logger = require("morgan");
 
 const morgan = require("morgan");
 
@@ -44,8 +43,31 @@ app.get("/ping", (req, res) => {
   res.json({ message: "/ pong" });
 });
 
-// app.post("/signup", createUser);
-// app.post("/postup", createPost);
+app.post("/signup", (req, res) => {
+  const { email, nickname, password } = req.body;
+  const queryRes = myDataSource.query(
+    `INSERT INTO users(email, nickname, password)
+    VALUES (?, ?, ?)
+    `,
+    [email, nickname, password]
+  );
+  queryRes
+    .then(() => {
+      res.status(201).json({ message: "userCreated" });
+    })
+    .catch(() => {
+      res.status(500).json({ message: "error" });
+    });
+});
+app.post("/postup", (req, res) => {
+  const { user_id, content } = req.body;
+  const queryRes = myDataSource.query(
+    `INSERT INTO postings(email, nickname, password)
+    VALUES (?, ?, ?)
+    `,
+    [email, nickname, password]
+  );
+});
 // app.get("/postsearch", searchPost);
 // app.patch("/postupdate", updatePost);
 // app.delete("/delete", deletePost);
